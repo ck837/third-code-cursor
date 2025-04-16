@@ -1,12 +1,12 @@
 import * as XLSX from 'xlsx';
 
 // Convert CommonJS imports to ES6 imports
-// import { calculateAmplitude } from './CalContent/fuzhi';
-// import { calculateEnergy } from './CalContent/nengliang';
-// import { calculateTimeDomain } from './CalContent/shiyu';
+import { calculateAmplitude } from './CalContent/fuzhi';
+import { calculateEnergy } from './CalContent/nengliang';
+import { calculateTimeDomain } from './CalContent/shiyu';
 // import { calculateFrequencyDomain } from './CalContent/pingyu';
 // import { calculateMainFrequency } from './CalContent/zhupingpingci';
-// import { calculateVelocity } from './CalContent/sudu';
+import { calculateVelocity } from './CalContent/sudu';
 
 // 定义输入文件路径
 const filePath = '/data.xlsx';
@@ -26,8 +26,6 @@ async function readExcelData() {
         
         // 将工作表转换为二维数组，并跳过表头
         const jsonData = XLSX.utils.sheet_to_json(worksheet, {header: 1}).slice(1);
-
-        console.log(jsonData);  
         
         // 确保每行数据只包含两列
         const processedData = jsonData
@@ -42,17 +40,16 @@ async function readExcelData() {
 }
 
 // 获取时域数据
-function getTimeDomainData() {
-    const rawData = readExcelData(dataPath);
+async function getTimeDomainData() {
+    const rawData = await readExcelData();
     return calculateTimeDomain(
-        rawData.map(row => row[0]), 
         rawData.map(row => row[1])
     );
 }
 
 // 获取频域数据
-function getFrequencyDomainData() {
-    const rawData = readExcelData(dataPath);
+async function getFrequencyDomainData() {
+    const rawData =await  readExcelData();
     return calculateFrequencyDomain(
         rawData.map(row => row[0]), 
         rawData.map(row => row[1])
@@ -60,29 +57,28 @@ function getFrequencyDomainData() {
 }
 
 // 获取幅值数据
-function getAmplitudeData() {
-    const rawData = readExcelData(dataPath);
-    return calculateAmplitude(rawData.map(row => row[1]));
+async function getAmplitudeData() {
+    const rawData = await  readExcelData();
+    return calculateAmplitude(rawData);
 }
 
 // 获取能量数据
-function getEnergyData() {
-    const rawData = readExcelData(dataPath);
+async function getEnergyData() {
+    const rawData = await readExcelData();
     return calculateEnergy(rawData.map(row => row[1]));
 }
 
 // 获取速度数据
-function getVelocityData() {
-    const rawData = readExcelData(dataPath);
+async function getVelocityData() {
+    const rawData = await readExcelData();
     return calculateVelocity(
-        rawData.map(row => row[0]), 
-        rawData.map(row => row[1])
+        rawData
     );
 }
 
 // 获取主頻次数据
 function getMainFrequencyData() {
-    const rawData = readExcelData(dataPath);
+    const rawData = readExcelData();
     return calculateMainFrequency(
         rawData.map(row => row[0]), 
         rawData.map(row => row[1])
